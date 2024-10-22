@@ -2,7 +2,7 @@
 import { useState } from 'react';
 
 export default function TodoList() {
-  const [todos, setTodos] = useState([]);
+  const [todos, setTodos] = useState<string[]>([]);
   const [newTodo, setNewTodo] = useState('');
 
   // Function to add a new todo item
