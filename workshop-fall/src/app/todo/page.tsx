@@ -1,8 +1,10 @@
 'use client'
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { Loader } from "lucide-react"
 
 export default function TodoList() {
   const [todos, setTodos] = useState<string[]>([]);
+  const [fetching, setFetching] = useState(true);
   const [newTodo, setNewTodo] = useState('');
 
   // Function to add a new todo item
@@ -10,13 +12,43 @@ export default function TodoList() {
     if (newTodo.trim() !== '') {
       setTodos([...todos, newTodo.trim()]);
       setNewTodo('');
+      fetch("http://localhost:3001/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"add": newTodo.trim()})
+      }).then(resp => {
+        console.log(resp.statusText)
+        resp.text().then(console.log)
+      })
     }
   };
 
   // Function to remove a todo item by index
   const removeTodo = (index: number) => {
     setTodos(todos.filter((_, i) => i !== index));
+    fetch("http://localhost:3001/", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({"remove": index})
+      }).then(resp => {
+        console.log(resp.statusText)
+        resp.text().then(console.log)
+      })
+    
   };
+
+  useEffect(() => {
+    fetch("http://localhost:3001/").then((resp) => {
+      resp.json().then(json => {
+        setTodos(json);
+        setFetching(false);
+      });
+    });
+  }, [])
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-50">
@@ -44,7 +76,7 @@ export default function TodoList() {
             Add
           </button>
         </div>
-        <ul className="space-y-2">
+        {fetching ? <Loader className="animate-spin text-white m-auto" width={50} height={50} color='black' /> : <ul className="space-y-2">
           {todos.map((todo, index) => (
             <li
               key={index}
@@ -59,7 +91,7 @@ export default function TodoList() {
               </button>
             </li>
           ))}
-        </ul>
+        </ul>}
       </div>
     </div>
   );

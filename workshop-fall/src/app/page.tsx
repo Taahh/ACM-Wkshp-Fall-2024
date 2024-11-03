@@ -8,11 +8,6 @@ const Home = () => {
         <p className="mt-4 text-2xl text-gray-600">
           To-do List App
         </p>
-        <ul className="text-black">
-          <li>Test</li>
-          <li>Test</li>
-          <li>Test</li>
-        </ul>
       </div>
     </div>
   );

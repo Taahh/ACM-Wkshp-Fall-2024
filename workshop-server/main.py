@@ -1,9 +1,11 @@
 from flask import Flask, request
+from flask_cors import CORS
 import json
 
-todos = []
+todos = ["test1", "test2", "test3"]
 
 app = Flask(__name__)
+CORS(app)
 app.debug = True
 
 
@@ -25,18 +27,19 @@ def post_test():
         data = request.get_json()
     except:
         if not data:
-            return "Invalid Option, provide JSON data that looks similar to {'add': 'adding', 'remove': 'removing'}\n"
+            return "Invalid Option, provide JSON data that looks similar to {'add': 'adding', 'remove': 1}\n"
 
     valid_option = False
     if "add" in data:
         todos.append(data["add"])
         valid_option = True
     if "remove" in data:
-        if data["remove"] in todos:
-            todos.remove(data["remove"])
+        index = int(data["remove"])
+        if index >= 0 and index < len(todos):
+            todos.pop(index)
         valid_option = True
     if not valid_option:
-        return "Invalid Option, provide JSON data that looks similar to {'add': 'adding', 'remove': 'removing'}\n"
+        return "Invalid Option, provide JSON data that looks similar to {'add': 'adding', 'remove': 1}\n"
     return "ToDo Updated\n"
 
 app.run(port=3001)
