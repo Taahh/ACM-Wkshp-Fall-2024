@@ -20,6 +20,7 @@ def post_test():
     # Check Content Type
     # Check if they specified JSON data
     # Check if they provided a valid operation ("add" or "remove")
+
     if request.content_type != "application/json":
         return "Specify header Content-Type=application/json\n"
     data = {}
@@ -40,6 +41,7 @@ def post_test():
         valid_option = True
     if not valid_option:
         return "Invalid Option, provide JSON data that looks similar to {'add': 'adding', 'remove': 1}\n"
+    print(todos)
     return "ToDo Updated\n"
 
 app.run(port=3001)
